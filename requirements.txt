@@ -1,11 +1,4 @@
-# Core
 streamlit==1.25.0
-
-# Deep learning
-tensorflow==2.18.0
-
-# NumPy para manipulación de arrays
-numpy==1.25.2
-
-# Pillow para carga y redimensionado de imágenes
+numpy==1.26.4
 Pillow==9.5.0
+tflite-runtime==2.13.0
