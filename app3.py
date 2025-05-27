@@ -1,4 +1,3 @@
-```python
 import os
 import streamlit as st
 import numpy as np
@@ -14,7 +13,8 @@ def load_tflite_model():
     interpreter.allocate_tensors()
     return interpreter
 
-interpreter = st.cache(load_tflite_model)()
+# Cacheamos la carga del intérprete
+interpreter = st.cache(allow_output_mutation=True)(load_tflite_model)()
 
 # Función de predicción usando TFLite
 def model_prediction_tflite(image_file, interpreter):
@@ -82,3 +82,4 @@ elif app_mode == "Reconocimiento de enfermedad":
             ]
             st.success(f"El modelo predice: {class_name[result_index]}")
 ```
+
