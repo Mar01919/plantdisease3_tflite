@@ -7,8 +7,8 @@ from tflite_runtime.interpreter import Interpreter
 # Ruta local de tu modelo TFLite
 MODEL_PATH = "model.tflite"
 
-# Carga y cachea el intérprete de TFLite una sola vez
-@st.cache_resource
+# Carga y cachea el intérprete de TFLite usando st.cache (compatible con Streamlit 1.17+)
+@st.cache(allow_output_mutation=True)
 def load_tflite_model():
     interpreter = Interpreter(model_path=MODEL_PATH)
     interpreter.allocate_tensors()
@@ -18,22 +18,19 @@ interpreter = load_tflite_model()
 
 # Función de predicción usando TFLite
 def model_prediction_tflite(image_file, interpreter):
-    # Carga y redimensiona la imagen
     image = Image.open(image_file).convert("RGB").resize((128, 128))
     input_data = np.expand_dims(np.array(image, dtype=np.float32), axis=0)
 
-    # Obtén detalles de entrada y salida
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    # Ejecuta la inferencia
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
     output_data = interpreter.get_tensor(output_details[0]['index'])
 
     return np.argmax(output_data)
 
-# Configuración del sidebar
+# Sidebar y navegación
 st.sidebar.title("Dashboard")
 app_mode = st.sidebar.selectbox("Elige Página", ["Inicio", "Acerca de", "Reconocimiento de enfermedad"])
 
@@ -44,7 +41,7 @@ if app_mode == "Inicio":
     if os.path.exists(image_path):
         st.image(image_path, use_column_width=True)
     st.markdown("""
-    ¡Bienvenido al Sistema de Reconocimiento de Enfermedades de las Plantas! 🌿🔍  
+    ¡Bienvenido al Sistema de Reconocimiento de Enfermedades de las Plantas! 🌿🔍
     Esta app utiliza un modelo TFLite para identificar enfermedades en hojas.
     """)
 
@@ -52,8 +49,8 @@ if app_mode == "Inicio":
 elif app_mode == "Acerca de":
     st.header("Acerca de")
     st.markdown("""
-    Este proyecto detecta más de 30 enfermedades de cultivos usando TensorFlow Lite.  
-    El modelo fue convertido a TFLite para optimizar tamaño y compatibilidad.
+    Este proyecto detecta más de 30 enfermedades de cultivos usando TensorFlow Lite.
+    Modelo convertido a TFLite para optimizar tamaño y compatibilidad.
     """)
 
 # Página de Predicción
@@ -67,7 +64,6 @@ elif app_mode == "Reconocimiento de enfermedad":
             st.balloons()
             result_index = model_prediction_tflite(test_image, interpreter)
 
-            # Lista de clases (ajusta si tu modelo tiene otras)
             class_name = [
                 'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
                 'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew',
@@ -85,5 +81,6 @@ elif app_mode == "Reconocimiento de enfermedad":
                 'Tomato___healthy'
             ]
             st.success(f"El modelo predice: **{class_name[result_index]}**")
+```
 
 
