@@ -37,7 +37,7 @@ app_mode = st.sidebar.selectbox("Elige Página", ["Inicio", "Acerca de", "Recono
 # Página de Inicio
 if app_mode == "Inicio":
     st.header("SISTEMA DE RECONOCIMIENTO DE ENFERMEDADES DE PLANTAS")
-    image_path = os.path.join(os.path.dirname(__file__), "home_page.jpeg")
+    image_path = os.path.join(os.path.dirname(__file__), "home_page.jpg")
     if os.path.exists(image_path):
         st.image(image_path, use_column_width=True)
     st.markdown("""
