@@ -81,6 +81,6 @@ elif app_mode == "Reconocimiento de enfermedad":
                 'Tomato___healthy'
             ]
             st.success(f"El modelo predice: **{class_name[result_index]}**")
-```
+
 
 
